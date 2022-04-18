@@ -33,10 +33,31 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
 
+use std::num::ParseIntError;
+use std::error;
+use std::string::ParseError;
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+            let num = s.rfind(',').unwrap_or(0);
+            if num==0 || num==s.len()-1 {
+                return Person::default()
+            }else {
+                let (name,age) = s.split_at(num +1);
+                let age = match age.to_string().parse::<usize>(){
+                    Ok(age)=>{age},
+                    Err(e)=>{return Person::default()}
+                };
+
+                let mut name = name.to_string();
+                name.pop();
+
+                return  Person{
+                        name,
+                        age
+                    }
+
+            }
     }
 }
 
